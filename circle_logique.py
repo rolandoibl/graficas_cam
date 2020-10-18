@@ -1,13 +1,12 @@
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QWidget, QApplication, QMessageBox
 import sys
-from d_line_window import Ui_MainWindow
+from d_circle_widget import Ui_FormCircle
 import numpy as np
 
-
-class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+class FormCircle(QWidget, Ui_FormCircle):
+    def __init__(self):
+        QWidget.__init__(self)
+        Ui_FormCircle.__init__(self)
         self.setupUi(self)
         self.graphWidget.setBackground('w')
         self.graphWidget.setMenuEnabled(False)
@@ -16,48 +15,53 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def calcular(self):
         # Leer valores de entrada
-        x0 = float(self.sbox_x0.text())
-        y0 = float(self.sbox_y0.text())
-        x1 = float(self.sbox_x1.text())
-        y1 = float(self.sbox_y1.text())
-        lamb = float(self.lineEdit.text())
+        xc = float(self.ledt_circle_x.text())
+        yc = float(self.ledt_circle_y.text())
+        r = float(self.ledt_circle_r.text())
+        lamb = float(self.ledt_line_lamb.text())
         # Manejo de excepciones
         if lamb > 1 or lamb < 0 or lamb <= 0.00001:
             # Ventana que indica ingresar un nuevo valor de lambda
-            msg = QtWidgets.QMessageBox()
+            msg = QMessageBox()
             msg.setWindowTitle("Error")
-            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setIcon(QMessageBox.Warning)
             msg.setText("Parece que hubo un error, vuelve a intentar con otros valores.")
             m = msg.exec_()
         else:
             # Cálculo de la línea
-            x = np.arange(x0, x1, lamb)
-            y = np.linspace(y0, y1, num=len(x))
+            circle = self.circulo(xc, yc, r, lamb)
             # Limpiar área de graficación
             self.graphWidget.clear()
             # Llamar a función de graficación
-            self.plot(x, y)
+            self.plot(circle['x'], circle['y'], r, xc, yc)
 
-    def plot(self, x, y):
+    def plot(self, x, y, r, xc, yc):
         # Color y tamaño de letras en la gráficas
         styles = {'color': '000000', 'font-size': '14px'}
         # Poner nombres de los ejes y dar formato
         self.graphWidget.setLabel('left', 'y', **styles)
         self.graphWidget.setLabel('bottom', 'x', **styles)
         self.graphWidget.setBackground('w')
-        self.graphWidget.setXRange(0, x[-1])
-        self.graphWidget.setYRange(0, y[-1])
+        self.graphWidget.setXRange(xc-r, xc+r)
+        self.graphWidget.setYRange(yc-r, yc+r)
         self.graphWidget.setMenuEnabled(False)
         # Función que grafica los puntos
         self.graphWidget.plot(x, y, symbol='o', pen=None)
 
-
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    main = MainWindow()
-    main.show()
-    sys.exit(app.exec_())
+    def circulo(self, xc, yc, r, lamb):
+        circulo = {}
+        x = []
+        y = []
+        for i in np.arange(0, 2 * np.pi, lamb):
+            x.append(xc + r * np.cos(i))
+            y.append(yc + r * np.sin(i))
+        circulo['x'] = x
+        circulo['y'] = y
+        return circulo
 
 
 if __name__ == '__main__':
-    main()
+    app = QApplication([])
+    application = FormCircle()
+    application.show()
+    app.exec()
