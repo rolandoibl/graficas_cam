@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 from d_graphics_main import Ui_MainWindow
 from line_logique import FormLine
 from circle_logique import FormCircle
-
+from arc_logique import FormArc
 
 class MainApplication(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -18,10 +18,12 @@ class MainApplication(QMainWindow, Ui_MainWindow):
         # Instancia de widgets
         self.widget_linea = FormLine()
         self.widget_circulo = FormCircle()
+        self.widget_arco = FormArc()
 
         # Agregar widgets al stack
         self.stk_widget.addWidget(self.widget_linea)
         self.stk_widget.addWidget(self.widget_circulo)
+        self.stk_widget.addWidget(self.widget_arco)
 
         # Set al primer widget
         self.stk_widget.setCurrentIndex(0)
@@ -59,12 +61,16 @@ class MainApplication(QMainWindow, Ui_MainWindow):
 
         self.action_line.triggered.connect(self.crear_linea)
         self.action_circle.triggered.connect(self.crear_circulo)
+        self.action_arc.triggered.connect(self.crear_arco)
 
     def crear_linea(self):
         self.stk_widget.setCurrentIndex(0)
 
     def crear_circulo(self):
         self.stk_widget.setCurrentIndex(1)
+
+    def crear_arco(self):
+        self.stk_widget.setCurrentIndex(2)
 
 if __name__ == '__main__':
     app = QApplication([])
