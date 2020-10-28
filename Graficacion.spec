@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['main.py'],
+a = Analysis(['main_graphics.py'],
              pathex=['C:\\Users\\rolan\\OneDrive\\Documentos\\LineaCad'],
              binaries=[],
              datas=[],
@@ -15,6 +15,7 @@ a = Analysis(['main.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -23,7 +24,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='Graficacion_linea',
+          name='Graficacion',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
