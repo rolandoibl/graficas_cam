@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QInputDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtWidgets import QMessageBox, QAction, QActionGroup, QWidget
 import sys
 from PyQt5.QtGui import QIcon
@@ -9,6 +9,7 @@ from line_logique import FormLine
 from circle_logique import FormCircle
 from arc_logique import FormArc
 from parabola_logique import FormParabola
+from spline_logique import FormSpline
 
 class MainApplication(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -21,12 +22,14 @@ class MainApplication(QMainWindow, Ui_MainWindow):
         self.widget_circulo = FormCircle()
         self.widget_arco = FormArc()
         self.widget_parabola = FormParabola()
+        self.widget_spline = FormSpline()
 
         # Agregar widgets al stack
         self.stk_widget.addWidget(self.widget_linea)
         self.stk_widget.addWidget(self.widget_circulo)
         self.stk_widget.addWidget(self.widget_arco)
         self.stk_widget.addWidget(self.widget_parabola)
+        self.stk_widget.addWidget(self.widget_spline)
 
         # Set al primer widget
         self.stk_widget.setCurrentIndex(0)
@@ -66,6 +69,7 @@ class MainApplication(QMainWindow, Ui_MainWindow):
         self.action_circle.triggered.connect(self.crear_circulo)
         self.action_arc.triggered.connect(self.crear_arco)
         self.action_parabola.triggered.connect(self.crear_parabola)
+        self.action_spline.triggered.connect(self.crear_spline)
 
     def crear_linea(self):
         self.stk_widget.setCurrentIndex(0)
@@ -78,6 +82,14 @@ class MainApplication(QMainWindow, Ui_MainWindow):
 
     def crear_parabola(self):
         self.stk_widget.setCurrentIndex(3)
+
+    def crear_spline(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Atención")
+        msg.setIcon(QMessageBox.Information)
+        msg.setText("Los coordenadas de los puntos deben ir separados por comas. Ejemplo: 2,2")
+        m = msg.exec_()
+        self.stk_widget.setCurrentIndex(4)
 
 if __name__ == '__main__':
     app = QApplication([])
